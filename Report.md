@@ -36,10 +36,10 @@ To run on GPU:
 
 | Problem Size (n = m) | CPU Time (s) | GPU Time (s) | Speedup |
 |----------------------|--------------|--------------|---------|
-| 5000                | 0.00271      | 0.26483      | ~0.01x  |
-| 8192                | 0.00447      | 0.15994      | ~0.028x |
-| 16384               | 0.00851      | 0.15253      | ~0.056x |
-| 20000               | 0.01018      | 0.23319      | ~0.044x |
+| 5000                 | 0.00271      | 0.26483      | ~0.01x  |
+| 8192                 | 0.00447      | 0.15994      | ~0.028x |
+| 16384                | 0.00851      | 0.15253      | ~0.056x |
+| 20000                | 0.01018      | 0.23319      | ~0.044x |
 
 > Note: GPU includes all memory operations as per the requirement.
 
@@ -58,36 +58,36 @@ Key commits in [GitHub Repo](https://github.com/seeshuraj/Cuda) include:
 ### Prompt Shared with ChatGPT 4o:
 > Implement a CUDA kernel for computing the exponential integral Ei(n, x) using the same logic as this CPU function:
 ```cpp
-float computeFloatEI(int n, float x) {
+float computeFloatEI(int n, float x) {{
     float sum = 0.0f;
     float term = x;
-    for (int k = 1; k <= 100; ++k) {
+    for (int k = 1; k <= 100; ++k) {{
         term *= x / (n + k);
         sum += term;
-    }
+    }}
     return term + sum;
-}
+}}
 ```
 
 ### ChatGPT CUDA Suggestion:
 ```cpp
-__device__ float computeFloatEI(int n, float x) {
+__device__ float computeFloatEI(int n, float x) {{
     float sum = 0.0f;
     float term = x;
-    for (int k = 1; k <= 100; ++k) {
+    for (int k = 1; k <= 100; ++k) {{
         term *= x / (n + k);
         sum += term;
-    }
+    }}
     return term + sum;
-}
+}}
 
-__global__ void exponentialIntegralKernel(float* results, int n, int m) {
+__global__ void exponentialIntegralKernel(float* results, int n, int m) {{
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < m) {
+    if (idx < m) {{
         float x = (float)(idx + 1);
         results[idx] = computeFloatEI(n, x);
-    }
-}
+    }}
+}}
 ```
 
 ### Comparison
